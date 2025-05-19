@@ -1,10 +1,10 @@
-# 🎰 SlotPick
+# 🎰 Slot Pick
 
 A slot machine that helps make your tough decisions!
 
 ## About
 
-SlotPick is a fun web page that turns decision-making into an game of chance. Add your choices and pull the slot machine lever to let fate decide.
+Slot Pick is a fun web page that turns decision-making into an game of chance. Add your choices and pull the slot machine lever to let fate decide.
 
 ## Features
 
@@ -27,4 +27,4 @@ SlotPick is a fun web page that turns decision-making into an game of chance. Ad
 
 1. Add your choices to the list
 2. Pull the lever
-3. Let SlotPick make your decision!
+3. Let Slot Pick make your decision!
