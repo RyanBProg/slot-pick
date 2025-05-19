@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+    <script defer src="scripts.js"></script>
+    <title>Unfortunate</title>
+  </head>
+  <body>
+    <div class="slot">
+      <div class="slot__header">
+        <p>🍀 🍒 Who's Lucky 🍒 🍀</p>
+      </div>
+
+      <div class="slot__body">
+        <div class="slot__face">
+          <div class="slot__window">
+            <div class="slot__wheel"></div>
+            <div class="slot__window-shadow"></div>
+          </div>
+          <div class="slot__lever">
+            <button class="slot__lever-handle" id="lever-handle"></button>
+
+            <!-- Tooltip -->
+            <div class="tooltip tooltip--lever hidden">
+              <p>Click the lever to spin!</p>
+              <button class="tooltip__next">Got it!</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="slot__table"></div>
+      </div>
+    </div>
+
+    <div class="choices">
+      <div class="choices__list">
+        <p class="choices__empty">No Choices Added...</p>
+      </div>
+      <div class="choices__controls">
+        <input type="text" id="choice-input" placeholder="Enter choice" />
+        <button id="add-button">Add</button>
+      </div>
+
+      <!-- Tooltip -->
+      <div class="tooltip tooltip--choices hidden">
+        <p>Add your choices here!</p>
+        <button class="tooltip__next">Next</button>
+      </div>
+    </div>
+  </body>
+</html>

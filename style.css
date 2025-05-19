@@ -1,0 +1,371 @@
+:root {
+  /* Colors */
+  --slot-blue: #0071e2;
+  --slot-blue-dark: #004284;
+  --handle-red: #ff4444;
+  --handle-red-dark: #cc0000;
+  --tooltip-bg: #333333;
+
+  /* Timings */
+  --spin-duration: 2s;
+  --lever-duration: 1s;
+  --hover-duration: 300ms;
+
+  /* Font */
+  --font-sm: 1.1rem;
+  --font-md: 1.3rem;
+  --font-lg: 2rem;
+}
+
+*,
+*::after,
+*::before {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  min-height: 100vh;
+  padding: 30px 10px;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 100px;
+  font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+}
+
+/* Slot machine */
+
+.slot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.slot__header {
+  border: 20px solid var(--slot-blue-dark);
+  border-radius: 70px 70px 0 0;
+  border-bottom: none;
+  height: 80px;
+  width: 400px;
+  margin: auto;
+  background-color: #ffffff;
+
+  & p {
+    font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
+    margin-top: 10px;
+    text-align: center;
+    font-size: var(--font-lg);
+    font-weight: 600;
+  }
+}
+
+.slot__body {
+  width: 500px;
+  height: 400px;
+  background-color: var(--slot-blue);
+  padding: 50px;
+  border: 5px solid var(--slot-blue-dark);
+  border-radius: 30px 30px 5px 5px;
+  position: relative;
+
+  &::after,
+  &::before {
+    content: "";
+    position: absolute;
+    bottom: -20px;
+    width: 80px;
+    height: 20px;
+    background-color: black;
+    border-radius: 0 0 10px 10px;
+  }
+
+  &::before {
+    left: 50px;
+  }
+
+  &::after {
+    right: 50px;
+  }
+}
+
+.slot__face {
+  display: flex;
+  gap: 40px;
+}
+
+.slot__window {
+  position: relative;
+  background-color: white;
+  height: 100%;
+  overflow: hidden;
+  height: 200px;
+  width: 400px;
+  border: 6px solid black;
+  border-radius: 5px;
+}
+
+.slot__wheel {
+  height: 100%;
+  transition: transform var(--spin-duration) ease-in-out;
+  transform: translateY(0);
+  font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
+
+  & div {
+    height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: var(--font-lg);
+    font-weight: bold;
+    text-align: center;
+    width: 100%;
+  }
+}
+
+.slot__window-shadow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background: linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.4) 0%,
+    rgba(0, 0, 0, 0) 30%,
+    rgba(0, 0, 0, 0) 70%,
+    rgba(0, 0, 0, 0.4) 100%
+  );
+}
+
+.slot__lever {
+  position: relative;
+  height: 200px;
+  width: 20px;
+  border: 4px solid rgb(95, 95, 95);
+  background-color: black;
+  border-radius: 10px;
+}
+
+.slot__lever-handle {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 35px;
+  height: 35px;
+  border: 4px solid var(--handle-red-dark);
+  border-radius: 50%;
+  background: var(--handle-red);
+
+  &:hover:not(:disabled) {
+    cursor: pointer;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.7;
+  }
+}
+
+.slot__lever-handle.pulled {
+  animation: pullLever var(--lever-duration) ease-in-out;
+}
+
+@keyframes pullLever {
+  0% {
+    transform: translateX(-50%) translateY(0);
+  }
+  50% {
+    transform: translateX(-50%) translateY(165px);
+  }
+  100% {
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+.slot__table {
+  border: 10px solid var(--slot-blue-dark);
+  background-color: black;
+  border-radius: 10px;
+  height: 60px;
+  width: 400px;
+  margin: 40px auto;
+  position: relative;
+
+  &::before,
+  &::after {
+    content: "";
+    position: absolute;
+    top: -25px;
+    width: 40px;
+    height: 15px;
+    background-color: var(--handle-red);
+    border-radius: 5px 5px 0 0;
+    border-bottom: 4px solid var(--handle-red-dark);
+  }
+
+  &::before {
+    left: 60px;
+  }
+
+  &::after {
+    right: 60px;
+  }
+}
+
+/* Choices container */
+
+.choices {
+  position: relative;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px;
+  width: 400px;
+}
+
+.choices__list {
+  width: 100%;
+
+  & .choices__empty {
+    font-size: var(--font-md);
+    font-weight: 500;
+    color: rgba(0, 0, 0, 0.299);
+    text-align: center;
+    margin-top: 10px;
+  }
+}
+
+.choices__item {
+  margin: 5px;
+  padding: 5px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  font-size: var(--font-md);
+  font-weight: 500;
+
+  & button {
+    border: none;
+    border-radius: 4px;
+    padding: 4px 10px;
+    font-size: var(--font-sm);
+    background-color: black;
+    color: white;
+
+    &:hover {
+      opacity: 0.8;
+      transition: opacity ease-in-out var(--hover-duration);
+    }
+  }
+}
+
+.choices__controls {
+  margin-top: 30px;
+  background-color: rgba(0, 0, 0, 0.15);
+  padding: 6px;
+  border-radius: 5px;
+  width: 100%;
+  display: flex;
+
+  & input {
+    background-color: transparent;
+    border: none;
+    padding: 10px 14px;
+    margin-left: 5px;
+    margin-right: 10px;
+    color: black;
+    font-size: var(--font-sm);
+    flex-grow: 1;
+  }
+
+  & button {
+    border: none;
+    padding: 10px 14px;
+    border-radius: 4px;
+    background-color: black;
+    color: white;
+    font-size: var(--font-sm);
+
+    &:hover {
+      opacity: 0.8;
+      transition: opacity ease-in-out var(--hover-duration);
+      cursor: pointer;
+    }
+  }
+}
+
+/* Tooltips */
+.tooltip {
+  position: absolute;
+  background: var(--tooltip-bg);
+  color: white;
+  padding: 20px;
+  border-radius: 5px;
+  font-size: var(--font-sm);
+  width: 250px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.tooltip::before {
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-top: 8px solid var(--tooltip-bg);
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.tooltip--choices {
+  top: 50px;
+  right: 50%;
+  transform: translateY(-100%) translateX(50%);
+}
+
+.tooltip--lever {
+  top: 0;
+  right: 50%;
+  transform: translateY(-100%) translateX(50%);
+}
+
+.tooltip__next {
+  border: none;
+  padding: 10px 14px;
+  border-radius: 4px;
+  background-color: var(--handle-red);
+  color: white;
+  font-size: var(--font-sm);
+  margin-top: 20px;
+
+  &:hover {
+    opacity: 0.8;
+    transition: opacity ease-in-out var(--hover-duration);
+    cursor: pointer;
+  }
+}
+
+.hidden {
+  display: none;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
