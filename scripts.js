@@ -10,6 +10,7 @@ function addChoice(choice) {
   choices.push(choice);
   updateDisplay();
   updateWheel();
+  saveChoicesToLocalStorage();
 }
 
 // Function to remove a name from the list
@@ -17,6 +18,7 @@ function removeChoice(index) {
   choices.splice(index, 1);
   updateDisplay();
   updateWheel();
+  saveChoicesToLocalStorage();
 }
 
 // Function to update the wheel display
@@ -56,11 +58,18 @@ function updateDisplay() {
   });
 }
 
+// Get a random index
+function getSecureRandomIndex(arrayLength) {
+  const array = new Uint32Array(1);
+  crypto.getRandomValues(array);
+  return Math.floor((array[0] / 2 ** 32) * arrayLength);
+}
+
 // Function to spin the slot machine
 function spin() {
   const choiceHeight = 200;
   const totalSpins = 2;
-  const randomIndex = Math.floor(Math.random() * choices.length);
+  const randomIndex = getSecureRandomIndex(choices.length);
   const totalDistance =
     (choices.length * totalSpins + randomIndex) * choiceHeight;
 
@@ -71,6 +80,53 @@ function spin() {
     slotWheel.style.transition = "none";
     slotWheel.style.transform = `translateY(-${randomIndex * choiceHeight}px)`;
   }, 4000);
+}
+
+// Function to get choices from local storage
+function getChoicesFromLocalStorage() {
+  const storedChoices = localStorage.getItem("choices");
+  if (storedChoices) {
+    choices = JSON.parse(storedChoices);
+    updateDisplay();
+    updateWheel();
+  }
+}
+
+// Function to save choices to local storage
+function saveChoicesToLocalStorage() {
+  localStorage.setItem("choices", JSON.stringify(choices));
+}
+
+// Logic for showing tooltips
+function showTooltips() {
+  const tooltipChoices = document.querySelector(".tooltip--choices");
+  const tooltipLever = document.querySelector(".tooltip--lever");
+  const hasCompletedTutorial = localStorage.getItem("completedTutorial");
+
+  // Checking if the user completed the tutorial previously
+  if (hasCompletedTutorial) {
+    return;
+  }
+
+  // Show first tooltip after a small delay
+  setTimeout(() => {
+    tooltipChoices.classList.remove("hidden");
+  }, 1000);
+
+  // Event listeners for tooltip buttons
+  tooltipChoices
+    .querySelector(".tooltip__next")
+    .addEventListener("click", () => {
+      tooltipChoices.classList.add("hidden");
+      tooltipLever.classList.remove("hidden");
+    });
+
+  tooltipLever.querySelector(".tooltip__next").addEventListener("click", () => {
+    tooltipLever.classList.add("hidden");
+
+    // Setting that the user has completed the tutorial
+    localStorage.setItem("completedTutorial", true);
+  });
 }
 
 addButton.addEventListener("click", () => {
@@ -114,34 +170,7 @@ choiceInput.addEventListener("keypress", (e) => {
   }
 });
 
-// Tooltips
 document.addEventListener("DOMContentLoaded", () => {
-  const tooltipChoices = document.querySelector(".tooltip--choices");
-  const tooltipLever = document.querySelector(".tooltip--lever");
-  const hasCompletedTutorial = localStorage.getItem("completedTutorial");
-
-  // Checking if the user completed the tutorial previously
-  if (hasCompletedTutorial) {
-    return;
-  }
-
-  // Show first tooltip after a small delay
-  setTimeout(() => {
-    tooltipChoices.classList.remove("hidden");
-  }, 1000);
-
-  // Event listeners for tooltip buttons
-  tooltipChoices
-    .querySelector(".tooltip__next")
-    .addEventListener("click", () => {
-      tooltipChoices.classList.add("hidden");
-      tooltipLever.classList.remove("hidden");
-    });
-
-  tooltipLever.querySelector(".tooltip__next").addEventListener("click", () => {
-    tooltipLever.classList.add("hidden");
-
-    // Setting that the user has completed the tutorial
-    localStorage.setItem("completedTutorial", true);
-  });
+  showTooltips();
+  getChoicesFromLocalStorage();
 });
